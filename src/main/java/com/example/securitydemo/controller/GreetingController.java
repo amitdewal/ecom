@@ -37,9 +37,7 @@ public class GreetingController {
 
 
 	@GetMapping("/hello")
-	public String sayHello(HttpServletRequest request) {
-		String header = request.getHeader("token");
-		System.out.println(header+" ----------------------------");
+	public String sayHello() {
 		return "hello";
 	}
 	

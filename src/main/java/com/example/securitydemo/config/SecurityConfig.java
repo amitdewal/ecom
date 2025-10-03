@@ -20,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.example.securitydemo.jwt.AuthEntryPointJwt;
 import com.example.securitydemo.jwt.AuthTokenFilter;
@@ -36,13 +37,6 @@ public class SecurityConfig {
 	private AuthEntryPointJwt unAuthorizeHandler;
 	
 
-//	public SecurityConfig(DataSource dataSource, AuthEntryPointJwt unAuthorizeHandler) {
-//		super();
-//		this.dataSource = dataSource;
-//		this.unAuthorizeHandler = unAuthorizeHandler;
-////		this.authTokenFilter=authTokenFilter;
-//	}
-
 	@Bean
 	public AuthTokenFilter authenticationJwtTokenFilter() {
 		return new AuthTokenFilter();
@@ -53,31 +47,22 @@ public class SecurityConfig {
 		http.authorizeHttpRequests((requests) -> requests.requestMatchers("/h2-console/**").permitAll()
 				.requestMatchers("/signin").permitAll()
 				.anyRequest().authenticated());
+		
 		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//		http.formLogin(withDefaults());
-//		http.httpBasic(withDefaults());
-
+		
 		http.exceptionHandling(exception -> exception.authenticationEntryPoint(unAuthorizeHandler));
 
-		http.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin));
+		  http.headers(headers -> headers
+	                .frameOptions(frameOptions -> frameOptions
+	                        .sameOrigin()
+	                )
+	        );
 		http.csrf(csrf -> csrf.disable());
+		  http.addFilterBefore(authenticationJwtTokenFilter(),
+	                UsernamePasswordAuthenticationFilter.class);
 		return http.build();
 	}
 
-//	@Bean
-//	public UserDetailsService userDetailsService() {
-//		UserDetails user1 = User.withUsername("user1").password(passwordEncoder().encode("password1")).roles("USER")
-//				.build();
-//
-//		UserDetails admin = User.withUsername("admin").password(passwordEncoder().encode("admin")).roles("ADMIN")
-//				.build();
-//
-//		JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
-//		userDetailsManager.createUser(user1);
-//		userDetailsManager.createUser(admin);
-//		return userDetailsManager;
-////		return new InMemoryUserDetailsManager(user1,admin);
-//	}
 	
 	  @Bean
 	    public UserDetailsService userDetailsService(DataSource dataSource) {

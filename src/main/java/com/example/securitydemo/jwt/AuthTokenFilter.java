@@ -1,6 +1,7 @@
 package com.example.securitydemo.jwt;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,21 +29,13 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 	@Autowired
 	private UserDetailsService userDetailsService;
 	
-	
-
-//	public AuthTokenFilter(JwtUtils jwtUtils, UserDetailsService userDetailsService) {
-//		super();
-//		this.jwtUtils = jwtUtils;
-//		this.userDetailsService = userDetailsService;
-//	}
-
-
-
-
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
+		  logger.debug("---- FILTER START ------------------------------------------------");
+	
+		    logger.debug("---- FILTER CONTINUE ------------------------------------------------");
 		
 		logger.debug("AuthTokenFilter called for URI: {}", request.getRequestURI());
 		

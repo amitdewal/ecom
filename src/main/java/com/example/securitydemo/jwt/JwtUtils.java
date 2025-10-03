@@ -23,16 +23,19 @@ import jakarta.servlet.http.HttpServletRequest;
 @Component
 public class JwtUtils {
 	private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
+	
+	@Value("${spring.app.jwtSecret}")
+	private String jwtSecret;
+
 
 	@Value("${spring.app.jwtExpirationMs}")
 	private int jwtExpirationMs;
 
-	@Value("${spring.app.jwtSecret}")
-	private String jwtSecret;
-
+	
 	// getting JWT from Header
 	  public String getJwtFromHeader(HttpServletRequest request) {
-	        String bearerToken = request.getHeader("Authorization");
+	        String bearerToken = request.getHeader("authorization");
+	        System.out.println(bearerToken+"00000000000000000000000000000");
 	        logger.debug("Authorization Header: {}", bearerToken);
 	        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
 	            return bearerToken.substring(7); // Remove Bearer prefix
